@@ -326,8 +326,8 @@ export function WorkflowProvider({
 
     try {
       const finalState = await executeWorkflow(
-        nodes as Node<NodeData>[],
-        edges,
+        nodes as WorkflowNode[],
+        edges as WorkflowEdge[],
         handleStatusUpdate
       );
       
