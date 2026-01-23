@@ -79,6 +79,7 @@ const markKeyExhausted = (key: string) => {
 };
 
 // Clear all exhausted keys (useful for debugging)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function clearExhaustedKeys() {
   exhaustedKeys.clear();
   console.log(`[Gemini API] Cleared all exhausted keys`);
@@ -253,6 +254,7 @@ export async function POST(request: NextRequest) {
           // Retry with fresh keys
           // Continue to try keys below
         } else {
+          const promptText = prompt.substring(0, 100);
           return NextResponse.json({
             success: true,
             text: `[All API Keys Exhausted - Simulated Response]\n\nTotal keys configured: ${allKeys.length}\nAll keys have reached their rate limit.\n\nIMPORTANT: Make sure:\n1. Keys are from DIFFERENT projects (not same project!)\n2. Server was restarted after adding keys\n3. Keys are comma-separated in .env.local\n\nYour prompt was: "${promptText}..."`,
