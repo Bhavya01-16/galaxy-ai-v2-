@@ -108,8 +108,7 @@ export default function Toolbar() {
         nodeCount: nodes.length,
         successCount,
         failedCount,
-        nodeRuns,
-      } as any);
+      });
 
     } catch (error) {
       const endTime = Date.now();

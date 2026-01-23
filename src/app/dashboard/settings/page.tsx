@@ -16,6 +16,7 @@ export default async function SettingsPage() {
         <h2 className="text-xl font-semibold text-white mb-4">Profile</h2>
         <div className="flex items-center gap-4">
           {user?.imageUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={user.imageUrl}
               alt="Profile"

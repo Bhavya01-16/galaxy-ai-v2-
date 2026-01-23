@@ -8,10 +8,8 @@ interface WorkflowEditorProps {
   workflowId: string;
 }
 
-export default function WorkflowEditor({ workflowId }: WorkflowEditorProps) {
-  // workflowId will be used later for save/load functionality
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  void workflowId;
+export default function WorkflowEditor({ workflowId: _workflowId }: WorkflowEditorProps) {
+  // _workflowId will be used later for save/load functionality
   const [workflowName, setWorkflowName] = useState("Untitled Workflow");
 
   return (

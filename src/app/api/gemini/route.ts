@@ -198,7 +198,7 @@ export async function POST(request: NextRequest) {
     // Parse and validate request body with Zod
     try {
       body = await request.json();
-    } catch (jsonError) {
+    } catch {
       return NextResponse.json(
         { 
           success: false, 
@@ -251,10 +251,8 @@ export async function POST(request: NextRequest) {
         const freshKeys = getAvailableKeys();
         if (freshKeys.length > 0) {
           // Retry with fresh keys
-          const promptText = prompt.substring(0, 100);
           // Continue to try keys below
         } else {
-          const promptText = prompt.substring(0, 100);
           return NextResponse.json({
             success: true,
             text: `[All API Keys Exhausted - Simulated Response]\n\nTotal keys configured: ${allKeys.length}\nAll keys have reached their rate limit.\n\nIMPORTANT: Make sure:\n1. Keys are from DIFFERENT projects (not same project!)\n2. Server was restarted after adding keys\n3. Keys are comma-separated in .env.local\n\nYour prompt was: "${promptText}..."`,
@@ -284,8 +282,6 @@ export async function POST(request: NextRequest) {
     await new Promise(resolve => setTimeout(resolve, 500));
 
     // Try each available key until one works
-    let lastError: Error | null = null;
-    
     for (const currentKey of keysToTry) {
       console.log(`[Gemini API] Trying key: ${currentKey.substring(0, 20)}...`);
       try {
@@ -357,7 +353,6 @@ export async function POST(request: NextRequest) {
 
       } catch (keyError) {
         const errorMsg = keyError instanceof Error ? keyError.message : "Unknown error";
-        lastError = keyError instanceof Error ? keyError : new Error(errorMsg);
         
         // Check if this key is rate limited
         if (errorMsg.includes("429") || errorMsg.includes("quota") || errorMsg.includes("Too Many Requests") || errorMsg.includes("rate limit") || errorMsg.includes("exceeded")) {
