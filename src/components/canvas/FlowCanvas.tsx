@@ -15,7 +15,7 @@ import {
 import "@xyflow/react/dist/style.css";
 
 import { useWorkflowStore } from "@/store";
-import type { NodeType, WorkflowNode } from "@/store/types";
+import type { NodeType, WorkflowNode, WorkflowEdge, NodeData } from "@/store/types";
 import { isValidConnection } from "@/lib/workflow-utils";
 
 // Import custom nodes
@@ -55,7 +55,7 @@ const connectionLineStyle = {
 
 function FlowCanvasInner() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
+  const reactFlowInstance = useRef<ReactFlowInstance<WorkflowNode, WorkflowEdge> | null>(null);
   const { screenToFlowPosition } = useReactFlow();
 
   const {
@@ -189,14 +189,14 @@ function FlowCanvasInner() {
   );
 
   // Handle init
-  const onInit = useCallback((instance: ReactFlowInstance) => {
+  const onInit = useCallback((instance: ReactFlowInstance<WorkflowNode, WorkflowEdge>) => {
     reactFlowInstance.current = instance;
   }, []);
 
   return (
     <div ref={reactFlowWrapper} className="w-full h-full relative">
       <Toolbar />
-      <ReactFlow
+      <ReactFlow<WorkflowNode, WorkflowEdge>
         nodes={nodes}
         edges={edges}
         onNodesChange={handleNodesChange}
