@@ -6,6 +6,7 @@ import { useNodesState, useEdgesState, addEdge } from "@xyflow/react";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
 import { isValidConnection, getHandleType, getEdgeColor } from "@/lib/workflow-utils";
 import { NodeType, type NodeData } from "@/types/nodes";
+import type { WorkflowNode, WorkflowEdge } from "@/store/types";
 import { 
   type WorkflowExecutionState, 
   type NodeExecutionStatus,
@@ -115,18 +116,18 @@ export function WorkflowProvider({
   const selectedNodes = nodes.filter((n) => n.selected);
 
   // Available sample workflows
-  const availableWorkflows = Object.entries(sampleWorkflows).map(([key, value]) => ({
-    key,
-    name: value.name,
-    description: value.description,
+  const availableWorkflows = sampleWorkflows.map((workflow) => ({
+    key: workflow.id,
+    name: workflow.name,
+    description: workflow.description,
   }));
 
   // Load a sample workflow
   const loadSampleWorkflow = useCallback((workflowKey: string) => {
-    const sample = sampleWorkflows[workflowKey as keyof typeof sampleWorkflows];
+    const sample = sampleWorkflows.find((w) => w.id === workflowKey);
     if (sample) {
-      setNodes(sample.workflow.nodes);
-      setEdges(sample.workflow.edges);
+      setNodes(sample.nodes);
+      setEdges(sample.edges);
     }
   }, [setNodes, setEdges]);
 
@@ -171,7 +172,8 @@ export function WorkflowProvider({
   // Handle connections with validation
   const onConnect = useCallback(
     (connection: Connection) => {
-      const validation = isValidConnection(connection, nodes, edges);
+      // Type cast nodes and edges to WorkflowNode[] and WorkflowEdge[] for validation
+      const validation = isValidConnection(connection, nodes as WorkflowNode[], edges as WorkflowEdge[]);
       
       if (!validation.valid) {
         setConnectionError(validation.reason || "Invalid connection");
@@ -183,8 +185,8 @@ export function WorkflowProvider({
 
       // Get source node to determine handle type
       const sourceNode = nodes.find((n) => n.id === connection.source);
-      const sourceType = sourceNode 
-        ? getHandleType(sourceNode.type, connection.sourceHandle || "", true)
+      const sourceType = sourceNode && sourceNode.type
+        ? getHandleType(sourceNode.type as NodeType, connection.sourceHandle || "", true)
         : null;
       const edgeColor = getEdgeColor(sourceType || connection.sourceHandle || "");
 
