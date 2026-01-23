@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// USER - Synced with Clerk authentication
+// ============================================================================
+model User {
+  id        String   @id // Clerk user ID
+  email     String   @unique
+  name      String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  workflows Workflow[]
+
+  @@map("users")
+}
+
+// ============================================================================
+// WORKFLOW - Main workflow/canvas definition
+// ============================================================================
+model Workflow {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Owner
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relations
+  nodes Node[]
+  edges Edge[]
+  runs  WorkflowRun[]
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("workflows")
+}
+
+// ============================================================================
+// NODE - React Flow nodes stored in database
+// ============================================================================
+model Node {
+  id       String @id @default(cuid())
+  nodeId   String // React Flow node ID (unique within workflow)
+  type     String // Node type: "text", "llm", "imageUpload", "videoUpload", "cropImage", "extractFrame"
+  position Json   // { x: number, y: number }
+  data     Json   // Node-specific data (prompt, model, settings, etc.)
+
+  // Parent workflow
+  workflowId String
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  // Node runs (execution history)
+  nodeRuns NodeRun[]
+
+  @@unique([workflowId, nodeId])
+  @@index([workflowId])
+  @@map("nodes")
+}
+
+// ============================================================================
+// EDGE - React Flow edges (connections between nodes)
+// ============================================================================
+model Edge {
+  id           String  @id @default(cuid())
+  edgeId       String  // React Flow edge ID
+  source       String  // Source node ID
+  target       String  // Target node ID
+  sourceHandle String? // Source handle ID (for typed connections)
+  targetHandle String? // Target handle ID (for typed connections)
+
+  // Parent workflow
+  workflowId String
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@unique([workflowId, edgeId])
+  @@index([workflowId])
+  @@map("edges")
+}
+
+// ============================================================================
+// WORKFLOW RUN - Single execution of a workflow
+// ============================================================================
+model WorkflowRun {
+  id        String            @id @default(cuid())
+  status    WorkflowRunStatus @default(PENDING)
+  startedAt DateTime          @default(now())
+  endedAt   DateTime?
+  duration  Int?              // Duration in milliseconds
+  error     String?           // Error message if failed
+
+  // Snapshot of workflow at execution time
+  workflowSnapshot Json // Stores nodes and edges as they were at run time
+
+  // Parent workflow
+  workflowId String
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  // Node runs for this workflow run
+  nodeRuns NodeRun[]
+
+  // Trigger.dev run ID for tracking
+  triggerRunId String?
+
+  @@index([workflowId])
+  @@index([startedAt])
+  @@index([status])
+  @@map("workflow_runs")
+}
+
+// ============================================================================
+// NODE RUN - Single execution of a node within a workflow run
+// ============================================================================
+model NodeRun {
+  id        String            @id @default(cuid())
+  nodeId    String            // Reference to the node's nodeId (React Flow ID)
+  nodeType  String            // Type of node at execution time
+  nodeLabel String            // Label/name of the node
+  status    NodeRunStatus     @default(PENDING)
+  startedAt DateTime?
+  endedAt   DateTime?
+  duration  Int?              // Duration in milliseconds
+
+  // Input/Output data
+  input  Json?   // Input data received from upstream nodes
+  output Json?   // Output data produced by this node
+  error  String? // Error message if failed
+
+  // Parent workflow run
+  workflowRunId String
+  workflowRun   WorkflowRun @relation(fields: [workflowRunId], references: [id], onDelete: Cascade)
+
+  // Reference to node definition (optional, node may be deleted)
+  nodeDbId String?
+  node     Node?   @relation(fields: [nodeDbId], references: [id], onDelete: SetNull)
+
+  // Trigger.dev task run ID
+  triggerTaskRunId String?
+
+  @@index([workflowRunId])
+  @@index([nodeId])
+  @@index([status])
+  @@map("node_runs")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+enum WorkflowRunStatus {
+  PENDING   // Waiting to start
+  RUNNING   // Currently executing
+  COMPLETED // All nodes completed successfully
+  PARTIAL   // Some nodes completed, some failed
+  FAILED    // Workflow failed
+  CANCELLED // User cancelled
+}
+
+enum NodeRunStatus {
+  PENDING   // Waiting to start
+  RUNNING   // Currently executing
+  COMPLETED // Completed successfully
+  FAILED    // Failed with error
+  SKIPPED   // Skipped (upstream dependency failed)
+}

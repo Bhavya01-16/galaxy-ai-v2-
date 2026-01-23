@@ -1,0 +1,461 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   BASE STYLES - Weavy.ai Dark Theme
+   ============================================================================ */
+
+:root {
+  --background: #0a0a0f;
+  --background-secondary: #0f0f15;
+  --background-tertiary: #14141b;
+  --background-elevated: #1a1a24;
+  --surface: #12121a;
+  --surface-secondary: #18181f;
+  --border: #2a2a35;
+  --border-light: #3a3a48;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-tertiary: #71717a;
+  --primary: #8b5cf6;
+  --primary-hover: #7c3aed;
+  --accent: #ec4899;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================================
+   SCROLLBAR STYLES
+   ============================================================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) var(--background-secondary);
+}
+
+/* ============================================================================
+   SELECTION STYLES
+   ============================================================================ */
+
+::selection {
+  background-color: rgba(139, 92, 246, 0.3);
+  color: var(--text-primary);
+}
+
+/* ============================================================================
+   FOCUS STYLES
+   ============================================================================ */
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+   INPUT STYLES
+   ============================================================================ */
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* ============================================================================
+   BUTTON BASE STYLES
+   ============================================================================ */
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ============================================================================
+   REACT FLOW CUSTOMIZATION
+   ============================================================================ */
+
+.react-flow__background {
+  background-color: var(--background) !important;
+}
+
+.react-flow__background-pattern {
+  fill: var(--border) !important;
+}
+
+.react-flow__minimap {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+}
+
+.react-flow__minimap-mask {
+  fill: rgba(0, 0, 0, 0.8) !important;
+}
+
+.react-flow__controls {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.react-flow__controls-button {
+  background-color: var(--surface) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--border) !important;
+  color: var(--text-secondary) !important;
+}
+
+.react-flow__controls-button:hover {
+  background-color: var(--background-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: none !important;
+}
+
+.react-flow__controls-button svg {
+  fill: currentColor !important;
+}
+
+/* Edge styles */
+.react-flow__edge-path {
+  stroke-width: 2px;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: var(--primary) !important;
+  stroke-width: 3px;
+}
+
+.react-flow__edge.animated .react-flow__edge-path {
+  stroke-dasharray: 5;
+  animation: dashdraw 0.5s linear infinite;
+}
+
+@keyframes dashdraw {
+  from {
+    stroke-dashoffset: 10;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Connection line */
+.react-flow__connection-line {
+  stroke: var(--primary);
+  stroke-width: 2px;
+}
+
+/* Handle styles */
+.react-flow__handle {
+  width: 12px !important;
+  height: 12px !important;
+  border: 2px solid var(--border) !important;
+  background-color: var(--surface) !important;
+  transition: all 0.15s ease;
+}
+
+.react-flow__handle:hover {
+  transform: scale(1.2);
+  border-color: var(--primary) !important;
+  background-color: var(--primary) !important;
+}
+
+.react-flow__handle.connecting {
+  border-color: var(--primary) !important;
+  background-color: var(--primary) !important;
+}
+
+.react-flow__handle.valid {
+  border-color: #22c55e !important;
+  background-color: #22c55e !important;
+}
+
+.react-flow__handle-top {
+  top: -6px !important;
+}
+
+.react-flow__handle-bottom {
+  bottom: -6px !important;
+}
+
+.react-flow__handle-left {
+  left: -6px !important;
+}
+
+.react-flow__handle-right {
+  right: -6px !important;
+}
+
+/* Node styles */
+.react-flow__node {
+  cursor: grab;
+}
+
+.react-flow__node:active {
+  cursor: grabbing;
+}
+
+.react-flow__node.selected {
+  outline: none;
+}
+
+/* Selection box */
+.react-flow__selection {
+  background: rgba(139, 92, 246, 0.1) !important;
+  border: 1px dashed var(--primary) !important;
+}
+
+/* ============================================================================
+   ANIMATION UTILITIES
+   ============================================================================ */
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 15px 3px rgba(139, 92, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 25px 6px rgba(139, 92, 246, 0.6);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ============================================================================
+   EXECUTION STATUS STYLES
+   ============================================================================ */
+
+.node-status-idle {
+  border-color: var(--border);
+}
+
+.node-status-pending {
+  border-color: #f59e0b;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+}
+
+.node-status-running {
+  border-color: #06b6d4;
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+.node-status-completed {
+  border-color: #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
+}
+
+.node-status-failed {
+  border-color: #ef4444;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+.node-status-skipped {
+  border-color: var(--text-tertiary);
+  opacity: 0.6;
+}
+
+/* ============================================================================
+   GLASS MORPHISM UTILITIES
+   ============================================================================ */
+
+.glass {
+  background: rgba(18, 18, 26, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
+
+.glass-light {
+  background: rgba(26, 26, 36, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+}
+
+/* ============================================================================
+   GRADIENT UTILITIES
+   ============================================================================ */
+
+.gradient-primary {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================================
+   TOOLTIP STYLES
+   ============================================================================ */
+
+.tooltip {
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  background-color: var(--background-elevated);
+  color: var(--text-primary);
+  font-size: 12px;
+  white-space: nowrap;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.15s ease;
+  z-index: 100;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================================================
+   CLERK CUSTOMIZATION
+   ============================================================================ */
+
+.cl-rootBox {
+  --clerk-background: var(--surface);
+  --clerk-text: var(--text-primary);
+}
+
+/* ============================================================================
+   NODE GLOW EFFECTS
+   ============================================================================ */
+
+.shadow-glow-amber {
+  box-shadow: 0 0 20px 4px rgba(245, 158, 11, 0.4);
+}
+
+.shadow-glow-green {
+  box-shadow: 0 0 20px 4px rgba(34, 197, 94, 0.3);
+}
+
+.shadow-glow-red {
+  box-shadow: 0 0 20px 4px rgba(239, 68, 68, 0.4);
+}
+
+.shadow-glow-blue {
+  box-shadow: 0 0 20px 4px rgba(59, 130, 246, 0.3);
+}
+
+.shadow-glow-purple {
+  box-shadow: 0 0 20px 4px rgba(139, 92, 246, 0.3);
+}
+
+/* ============================================================================
+   DRAG AND DROP STYLES
+   ============================================================================ */
+
+.drag-over {
+  background: rgba(139, 92, 246, 0.05);
+  border: 2px dashed var(--primary);
+}
+
+/* ============================================================================
+   NODE HOVER EFFECTS
+   ============================================================================ */
+
+.react-flow__node:hover {
+  z-index: 10;
+}
+
+/* Make delete button visible on node hover */
+.react-flow__node:hover .opacity-0 {
+  opacity: 1;
+}
