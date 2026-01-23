@@ -79,7 +79,7 @@ const markKeyExhausted = (key: string) => {
 };
 
 // Clear all exhausted keys (useful for debugging)
-export function clearExhaustedKeys() {
+function clearExhaustedKeys() {
   exhaustedKeys.clear();
   console.log(`[Gemini API] Cleared all exhausted keys`);
 }
