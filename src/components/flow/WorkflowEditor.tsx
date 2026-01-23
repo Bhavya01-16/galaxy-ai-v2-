@@ -8,7 +8,9 @@ interface WorkflowEditorProps {
   workflowId: string;
 }
 
-export default function WorkflowEditor({ workflowId: _workflowId }: WorkflowEditorProps) {
+export default function WorkflowEditor({ 
+  workflowId: _workflowId // eslint-disable-line @typescript-eslint/no-unused-vars
+}: WorkflowEditorProps) {
   // _workflowId will be used later for save/load functionality
   const [workflowName, setWorkflowName] = useState("Untitled Workflow");
 
