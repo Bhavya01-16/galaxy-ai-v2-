@@ -9,13 +9,14 @@ import {
   BackgroundVariant,
   ReactFlowProvider,
   useReactFlow,
-  type ReactFlowInstance,
   type Connection,
+  type IsValidConnection,
+  type NodeTypes,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
 import { useWorkflowStore } from "@/store";
-import type { NodeType, WorkflowNode, WorkflowEdge, NodeData } from "@/store/types";
+import type { NodeType, WorkflowNode, WorkflowEdge } from "@/store/types";
 import { isValidConnection } from "@/lib/workflow-utils";
 
 // Import custom nodes
@@ -28,14 +29,14 @@ import ExtractFrameNode from "../nodes/ExtractFrameNode";
 import Toolbar from "./Toolbar";
 
 // Node type mapping for React Flow
-const nodeTypes = {
+const nodeTypes: NodeTypes = {
   textNode: TextNode,
   imageUploadNode: ImageUploadNode,
   videoUploadNode: VideoUploadNode,
   llmNode: LLMNode,
   cropImageNode: CropImageNode,
   extractFrameNode: ExtractFrameNode,
-};
+} as NodeTypes;
 
 // Default edge options
 const defaultEdgeOptions = {
@@ -55,7 +56,6 @@ const connectionLineStyle = {
 
 function FlowCanvasInner() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const reactFlowInstance = useRef<ReactFlowInstance<WorkflowNode, WorkflowEdge> | null>(null);
   const { screenToFlowPosition } = useReactFlow();
 
   const {
@@ -149,9 +149,16 @@ function FlowCanvasInner() {
   );
 
   // Validate connection before allowing it
-  const handleIsValidConnection = useCallback(
-    (connection: Connection) => {
-      const result = isValidConnection(connection, nodes, edges);
+  const handleIsValidConnection: IsValidConnection = useCallback(
+    (connection) => {
+      // Normalize connection to ensure sourceHandle and targetHandle are string | null (not undefined)
+      const normalizedConnection: Connection = {
+        source: connection.source,
+        target: connection.target,
+        sourceHandle: connection.sourceHandle ?? null,
+        targetHandle: connection.targetHandle ?? null,
+      };
+      const result = isValidConnection(normalizedConnection, nodes, edges);
       return result.valid;
     },
     [nodes, edges]
@@ -188,11 +195,6 @@ function FlowCanvasInner() {
     [onNodesChange, takeSnapshot]
   );
 
-  // Handle init
-  const onInit = useCallback((instance: ReactFlowInstance<WorkflowNode, WorkflowEdge>) => {
-    reactFlowInstance.current = instance;
-  }, []);
-
   return (
     <div ref={reactFlowWrapper} className="w-full h-full relative">
       <Toolbar />
@@ -202,7 +204,6 @@ function FlowCanvasInner() {
         onNodesChange={handleNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={handleConnect}
-        onInit={onInit}
         onDrop={onDrop}
         onDragOver={onDragOver}
         onSelectionChange={onSelectionChange}

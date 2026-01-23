@@ -18,6 +18,7 @@ import { NodeType } from "@/types/nodes";
 import NodeSidebar from "./NodeSidebar";
 import { useWorkflow, WorkflowProvider } from "@/context/WorkflowContext";
 import { isValidConnection as validateConnection } from "@/lib/workflow-utils";
+import type { WorkflowNode, WorkflowEdge } from "@/store/types";
 import ConnectionError from "./ConnectionError";
 import CanvasToolbar from "./CanvasToolbar";
 import HistoryPanel from "./HistoryPanel";
@@ -109,7 +110,8 @@ function FlowCanvasInner() {
         sourceHandle: connection.sourceHandle ?? null,
         targetHandle: connection.targetHandle ?? null,
       };
-      const validation = validateConnection(conn, nodes, edges);
+      // Type cast nodes and edges to WorkflowNode[] and WorkflowEdge[] for validation
+      const validation = validateConnection(conn, nodes as WorkflowNode[], edges as WorkflowEdge[]);
       return validation.valid;
     },
     [nodes, edges]

@@ -7,7 +7,7 @@ import { BaseNode } from "./BaseNode";
 import { useWorkflowStore } from "@/store";
 import type { TextNodeData } from "@/store/types";
 
-function TextNodeComponent({ id, data, selected, ...props }: NodeProps<TextNodeData>) {
+function TextNodeComponent({ id, data, selected, ...props }: Omit<NodeProps, "data"> & { data: TextNodeData }) {
   const { updateNodeData } = useWorkflowStore();
 
   const handleTextChange = useCallback(

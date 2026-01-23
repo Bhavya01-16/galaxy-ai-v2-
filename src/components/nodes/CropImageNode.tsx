@@ -7,7 +7,7 @@ import { BaseNode } from "./BaseNode";
 import { useWorkflowStore } from "@/store";
 import type { CropImageNodeData } from "@/store/types";
 
-function CropImageNodeComponent({ id, data, selected, ...props }: NodeProps<CropImageNodeData>) {
+function CropImageNodeComponent({ id, data, selected, ...props }: Omit<NodeProps, "data"> & { data: CropImageNodeData }) {
   const { updateNodeData } = useWorkflowStore();
 
   const handleChange = useCallback(

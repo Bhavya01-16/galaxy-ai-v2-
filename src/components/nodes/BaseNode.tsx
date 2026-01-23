@@ -118,7 +118,8 @@ export function NodeHandle({ type, position, id, handleType = "any", label, isCo
 // BASE NODE WRAPPER
 // ============================================================================
 
-interface BaseNodeProps extends NodeProps<BaseNodeData> {
+interface BaseNodeProps extends Omit<NodeProps, "data"> {
+  data: BaseNodeData;
   icon: ReactNode;
   iconBgColor: string;
   children?: ReactNode;

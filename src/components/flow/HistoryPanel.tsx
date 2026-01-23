@@ -148,7 +148,7 @@ function NodeExecutionRow({ execution }: { execution: NodeExecutionRecord }) {
             </div>
           )}
           
-          {execution.output && (
+          {execution.output != null && (
             <div className="space-y-1">
               <span className="text-xs text-gray-500">Output:</span>
               <pre className="p-2 bg-gray-900 rounded text-xs text-gray-300 overflow-x-auto max-h-32">

@@ -8,7 +8,7 @@ import { useWorkflowStore } from "@/store";
 import type { ImageUploadNodeData } from "@/store/types";
 import { FileUploader } from "@/components/upload";
 
-function ImageUploadNodeComponent({ id, data, selected, ...props }: NodeProps<ImageUploadNodeData>) {
+function ImageUploadNodeComponent({ id, data, selected, ...props }: Omit<NodeProps, "data"> & { data: ImageUploadNodeData }) {
   const { updateNodeData } = useWorkflowStore();
 
   const handleUpload = useCallback(

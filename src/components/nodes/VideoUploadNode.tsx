@@ -7,7 +7,7 @@ import { BaseNode } from "./BaseNode";
 import { useWorkflowStore } from "@/store";
 import type { VideoUploadNodeData } from "@/store/types";
 
-function VideoUploadNodeComponent({ id, data, selected, ...props }: NodeProps<VideoUploadNodeData>) {
+function VideoUploadNodeComponent({ id, data, selected, ...props }: Omit<NodeProps, "data"> & { data: VideoUploadNodeData }) {
   const { updateNodeData } = useWorkflowStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);

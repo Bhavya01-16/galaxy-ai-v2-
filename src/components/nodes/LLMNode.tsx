@@ -13,7 +13,7 @@ const MODELS = [
   { value: "gemini-2.0-flash-lite", label: "Gemini 2.0 Flash Lite" },
 ] as const;
 
-function LLMNodeComponent({ id, data, selected, ...props }: NodeProps<LLMNodeData>) {
+function LLMNodeComponent({ id, data, selected, ...props }: Omit<NodeProps, "data"> & { data: LLMNodeData }) {
   const { updateNodeData } = useWorkflowStore();
 
   const handleModelChange = useCallback(

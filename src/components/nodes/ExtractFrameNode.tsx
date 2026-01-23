@@ -13,7 +13,7 @@ const FORMATS = [
   { value: "webp", label: "WebP" },
 ] as const;
 
-function ExtractFrameNodeComponent({ id, data, selected, ...props }: NodeProps<ExtractFrameNodeData>) {
+function ExtractFrameNodeComponent({ id, data, selected, ...props }: Omit<NodeProps, "data"> & { data: ExtractFrameNodeData }) {
   const { updateNodeData } = useWorkflowStore();
 
   const handleTimestampChange = useCallback(
