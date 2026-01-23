@@ -257,8 +257,8 @@ async function executeNode(
 
 function getNodeOutput(
   result: NodeExecutionResult,
-  nodeType: NodeType,
-  targetHandleId: string
+  nodeType: NodeType
+  // targetHandleId: string // Will be used for multi-output nodes in future
 ): unknown {
   const output = result.output as Record<string, unknown> | undefined;
   if (!output) return undefined;

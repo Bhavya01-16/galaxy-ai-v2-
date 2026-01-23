@@ -21,7 +21,7 @@ import {
   Crop,
   Film,
 } from "lucide-react";
-import type { WorkflowRunStatus, NodeExecutionStatus, WorkflowRunSummary, NodeRunRecord, NodeType } from "@/store/types";
+import type { WorkflowRunStatus, NodeExecutionStatus, WorkflowRunSummary, NodeRunRecord } from "@/store/types";
 
 // ============================================================================
 // HELPER COMPONENTS
