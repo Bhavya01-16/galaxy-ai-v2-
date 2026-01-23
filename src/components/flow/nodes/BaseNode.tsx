@@ -2,7 +2,7 @@
 
 import { Handle, Position, useEdges } from "@xyflow/react";
 import type { HandleType, BaseNodeData } from "@/types/nodes";
-import type { NodeExecutionStatus } from "@/types/execution";
+import type { NodeExecutionStatus } from "@/store/types";
 
 interface BaseNodeProps {
   id: string;
@@ -50,10 +50,15 @@ const executionStyles: Record<NodeExecutionStatus, { border: string; shadow: str
     shadow: "shadow-lg shadow-green-500/20", 
     badge: "bg-green-500/20 text-green-400" 
   },
-  error: { 
+  failed: { 
     border: "border-red-500", 
     shadow: "shadow-lg shadow-red-500/30", 
     badge: "bg-red-500/20 text-red-400" 
+  },
+  skipped: {
+    border: "",
+    shadow: "",
+    badge: "bg-gray-500/20 text-gray-400"
   },
 };
 
@@ -74,11 +79,12 @@ const executionIcons: Record<NodeExecutionStatus, React.ReactNode> = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
     </svg>
   ),
-  error: (
+  failed: (
     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
     </svg>
   ),
+  skipped: null,
 };
 
 const executionLabels: Record<NodeExecutionStatus, string> = {
@@ -86,7 +92,8 @@ const executionLabels: Record<NodeExecutionStatus, string> = {
   pending: "Waiting",
   running: "Running",
   completed: "Done",
-  error: "Error",
+  failed: "Error",
+  skipped: "Skipped",
 };
 
 export default function BaseNode({
@@ -238,7 +245,7 @@ export default function BaseNode({
           </div>
         )}
         
-        {executionStatus === "error" && (
+        {executionStatus === "failed" && (
           <div className="mb-2 px-2 py-1 bg-red-500/10 border border-red-500/20 rounded-lg">
             <div className="flex items-center gap-1.5 text-[10px] text-red-400">
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

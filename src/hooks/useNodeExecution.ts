@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext, createContext } from "react";
-import type { NodeExecutionStatus, NodeExecutionResult } from "@/types/execution";
+import type { NodeExecutionStatus, NodeExecutionResult } from "@/store/types";
 
 // Context for passing execution status to nodes
 interface NodeExecutionContextType {

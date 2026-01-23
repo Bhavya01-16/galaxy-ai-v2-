@@ -6,11 +6,9 @@ import { useNodesState, useEdgesState, addEdge } from "@xyflow/react";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
 import { isValidConnection, getHandleType, getEdgeColor } from "@/lib/workflow-utils";
 import { NodeType, type NodeData } from "@/types/nodes";
-import type { WorkflowNode, WorkflowEdge } from "@/store/types";
+import type { WorkflowNode, WorkflowEdge, NodeExecutionStatus, NodeExecutionResult } from "@/store/types";
 import { 
   type WorkflowExecutionState, 
-  type NodeExecutionStatus,
-  type NodeExecutionResult,
   initialExecutionState 
 } from "@/types/execution";
 import { executeWorkflow } from "@/lib/workflow-executor";
