@@ -6,11 +6,14 @@ import { useNodesState, useEdgesState, addEdge } from "@xyflow/react";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
 import { isValidConnection, getHandleType, getEdgeColor } from "@/lib/workflow-utils";
 import { NodeType, type NodeData } from "@/types/nodes";
-import type { WorkflowNode, WorkflowEdge, NodeExecutionStatus, NodeExecutionResult } from "@/store/types";
-import { 
-  type WorkflowExecutionState, 
-  initialExecutionState 
-} from "@/types/execution";
+import type { 
+  WorkflowNode, 
+  WorkflowEdge, 
+  NodeExecutionStatus, 
+  NodeExecutionResult,
+  WorkflowExecutionState,
+  WorkflowRunStatus
+} from "@/store/types";
 import { executeWorkflow } from "@/lib/workflow-executor";
 import type { WorkflowRunSummary, WorkflowRunRecord } from "@/types/history";
 import * as historyStore from "@/lib/history-store";
@@ -94,7 +97,11 @@ export function WorkflowProvider({
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [connectionError, setConnectionError] = useState<string | null>(null);
-  const [executionState, setExecutionState] = useState<WorkflowExecutionState>(initialExecutionState);
+  const [executionState, setExecutionState] = useState<WorkflowExecutionState>({
+    status: "idle",
+    nodeStatuses: {},
+    nodeResults: {},
+  });
   const [isExecuting, setIsExecuting] = useState(false);
   const hasLoadedSample = useRef(false);
   
@@ -286,7 +293,7 @@ export function WorkflowProvider({
         historyStore.updateNodeExecution(currentRunId, nodeId, {
           status: historyStatus,
           startedAt: status === "running" ? new Date() : undefined,
-          completedAt: status === "completed" || status === "error" ? new Date() : undefined,
+          completedAt: status === "completed" || status === "failed" ? new Date() : undefined,
           duration: result?.duration,
           output: result?.output,
           error: result?.error,
@@ -313,7 +320,7 @@ export function WorkflowProvider({
 
     setIsExecuting(true);
     setExecutionState({
-      status: "running",
+      status: "running" as WorkflowRunStatus,
       nodeStatuses: {},
       nodeResults: {},
       startTime: Date.now(),
@@ -336,7 +343,7 @@ export function WorkflowProvider({
     } catch (error) {
       setExecutionState((prev) => ({
         ...prev,
-        status: "error",
+        status: "failed" as WorkflowRunStatus,
         error: error instanceof Error ? error.message : "Unknown error",
         endTime: Date.now(),
       }));
@@ -365,7 +372,7 @@ export function WorkflowProvider({
     
     setExecutionState((prev) => ({
       ...prev,
-      status: "cancelled",
+      status: "cancelled" as WorkflowRunStatus,
       endTime: Date.now(),
     }));
     setIsExecuting(false);

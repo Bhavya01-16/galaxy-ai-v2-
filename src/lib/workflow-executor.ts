@@ -410,7 +410,7 @@ function gatherInputs(
     const sourceResult = results[connection.sourceNodeId];
 
     if (sourceResult && sourceResult.status === "completed" && sourceNode) {
-      const output = getNodeOutput(sourceResult, sourceNode.type, targetHandle);
+      const output = getNodeOutput(sourceResult, sourceNode.type);
       inputs[targetHandle] = output;
     }
   }
