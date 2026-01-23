@@ -181,8 +181,12 @@ export function WorkflowProvider({
 
       takeSnapshot();
 
-      const sourceType = getHandleType(connection.sourceHandle);
-      const edgeColor = getEdgeColor(sourceType);
+      // Get source node to determine handle type
+      const sourceNode = nodes.find((n) => n.id === connection.source);
+      const sourceType = sourceNode 
+        ? getHandleType(sourceNode.type, connection.sourceHandle || "", true)
+        : null;
+      const edgeColor = getEdgeColor(sourceType || connection.sourceHandle || "");
 
       setEdges((eds) =>
         addEdge(

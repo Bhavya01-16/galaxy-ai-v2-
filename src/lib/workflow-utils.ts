@@ -330,3 +330,33 @@ export function isInputConnected(
     (e) => e.target === nodeId && e.targetHandle === handleId
   );
 }
+
+// ============================================================================
+// EDGE COLOR BY HANDLE TYPE
+// ============================================================================
+
+import type { HandleType } from "@/store/types";
+
+const EDGE_COLORS: Record<string, string> = {
+  text: "#3b82f6",   // blue
+  image: "#22c55e",  // green
+  video: "#a855f7",  // purple
+  frame: "#f97316",  // orange
+  any: "#6366f1",    // indigo
+  default: "#6366f1", // indigo
+};
+
+export function getEdgeColor(sourceHandle: HandleType | string | null | undefined): string {
+  if (!sourceHandle) return EDGE_COLORS.default;
+  
+  // If it's a HandleType, use it directly
+  const handleStr = String(sourceHandle).toLowerCase();
+  
+  if (handleStr === "text" || handleStr.includes("text")) return EDGE_COLORS.text;
+  if (handleStr === "image" || handleStr.includes("image")) return EDGE_COLORS.image;
+  if (handleStr === "video" || handleStr.includes("video")) return EDGE_COLORS.video;
+  if (handleStr === "frame" || handleStr.includes("frame")) return EDGE_COLORS.frame;
+  if (handleStr === "any") return EDGE_COLORS.any;
+  
+  return EDGE_COLORS.default;
+}
