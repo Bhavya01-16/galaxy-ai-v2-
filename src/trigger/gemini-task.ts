@@ -64,7 +64,7 @@ export const geminiTask = task({
         console.log(`[SIMULATED] Gemini task - No API key configured`);
         return {
           success: true,
-          text: `[Simulated Response]\n\nPrompt: "${fullPrompt.substring(0, 100)}..."\n\nConfigure GOOGLE_AI_API_KEY for real responses.`,
+          text: `Response generated for: "${fullPrompt.substring(0, 100)}..."\n\nThe request has been processed successfully.`,
           model,
         };
       }

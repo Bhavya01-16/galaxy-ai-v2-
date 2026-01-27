@@ -1,8 +1,8 @@
 "use client";
 
 import { Handle, Position, useEdges } from "@xyflow/react";
-import type { HandleType, BaseNodeData } from "@/types/nodes";
-import type { NodeExecutionStatus } from "@/store/types";
+import type { BaseNodeData } from "@/types/nodes";
+import type { HandleType, NodeExecutionStatus } from "@/store/types";
 
 interface BaseNodeProps {
   id: string;

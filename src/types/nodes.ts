@@ -1,8 +1,5 @@
 import type { Node } from "@xyflow/react";
 
-// Handle types for type-safe connections
-export type HandleType = "text" | "image" | "video" | "frame" | "any";
-
 // Node data types - using Record<string, unknown> compatible interface
 export interface BaseNodeData extends Record<string, unknown> {
   label: string;
@@ -67,8 +64,9 @@ export interface NodeConfig {
   icon: React.ReactNode;
   description: string;
   defaultData: NodeData;
-  inputs: HandleType[];
-  outputs: HandleType[];
+  // Use inline type to avoid duplicate HandleType import
+  inputs: ("text" | "image" | "video" | "frame" | "any")[];
+  outputs: ("text" | "image" | "video" | "frame" | "any")[];
   color: string;
 }
 

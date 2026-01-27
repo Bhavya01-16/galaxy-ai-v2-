@@ -1,5 +1,9 @@
 import type { Connection } from "@xyflow/react";
-import type { WorkflowNode, WorkflowEdge, NodeType, HandleType } from "@/store/types";
+import type { WorkflowNode, WorkflowEdge, NodeType } from "@/store/types";
+import type { HandleType as HandleTypeDef } from "@/store/types";
+
+// Alias to avoid duplicate identifier issues
+type HandleType = HandleTypeDef;
 
 // ============================================================================
 // HANDLE TYPE DEFINITIONS FOR EACH NODE
@@ -334,8 +338,6 @@ export function isInputConnected(
 // ============================================================================
 // EDGE COLOR BY HANDLE TYPE
 // ============================================================================
-
-import type { HandleType } from "@/store/types";
 
 const EDGE_COLORS: Record<string, string> = {
   text: "#3b82f6",   // blue

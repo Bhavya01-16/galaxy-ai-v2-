@@ -36,8 +36,8 @@ async function executeGeminiTask(
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
-      // Call server-side API route
-      const response = await fetch("/api/gemini", {
+      // Call unified LLM API route (supports multiple providers with fallback)
+      const response = await fetch("/api/llm", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
