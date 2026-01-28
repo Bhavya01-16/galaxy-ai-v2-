@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { UserButton } from "@clerk/nextjs";
 import { useWorkflowStore } from "@/store";
 import {
   ChevronLeft,
@@ -154,32 +155,41 @@ export default function Sidebar() {
       `}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-surface-border">
+      <div className="flex items-center justify-between p-4 border-b border-surface-border gap-2">
         {!isCollapsed && (
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
-            <span className="font-semibold text-text-primary">Galaxy AI</span>
+            <span className="font-semibold text-text-primary truncate">Galaxy AI</span>
           </div>
         )}
 
-        <button
-          onClick={toggleSidebar}
-          className={`
-            p-2 rounded-lg bg-surface hover:bg-background-hover
-            border border-surface-border text-text-secondary
-            hover:text-text-primary transition-colors
-            ${isCollapsed ? "mx-auto" : ""}
-          `}
-          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {isCollapsed ? (
-            <ChevronRight className="w-4 h-4" />
-          ) : (
-            <ChevronLeft className="w-4 h-4" />
-          )}
-        </button>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <UserButton
+            afterSignOutUrl="/"
+            appearance={{
+              elements: {
+                avatarBox: "w-8 h-8",
+              },
+            }}
+          />
+          <button
+            onClick={toggleSidebar}
+            className={`
+              p-2 rounded-lg bg-surface hover:bg-background-hover
+              border border-surface-border text-text-secondary
+              hover:text-text-primary transition-colors
+            `}
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {isCollapsed ? (
+              <ChevronRight className="w-4 h-4" />
+            ) : (
+              <ChevronLeft className="w-4 h-4" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}

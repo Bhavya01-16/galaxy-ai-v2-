@@ -80,12 +80,12 @@ const getAvailableProviders = (): ProviderConfig[] => {
     });
   }
 
-  // Groq (very generous free tier, very fast)
+  // Groq (very generous free tier, very fast) - Higher priority for reliability
   if (process.env.GROQ_API_KEY) {
     providers.push({
       name: "groq",
       apiKey: process.env.GROQ_API_KEY,
-      priority: 50,
+      priority: 5, // Higher priority - try Groq early since it's free and reliable
     });
   }
 
@@ -598,12 +598,16 @@ export async function POST(request: NextRequest) {
         const errorMsg = error instanceof Error ? error.message : "Unknown error";
         console.log(`[LLM API] Provider ${provider.name} failed: ${errorMsg}`);
 
-        // Check if it's a rate limit/quota error
+        // Check if it's a rate limit/quota error - be very thorough
         const isRateLimit = errorMsg.includes("429") ||
           errorMsg.includes("quota") ||
           errorMsg.includes("rate limit") ||
           errorMsg.includes("exceeded") ||
-          errorMsg.includes("insufficient_quota");
+          errorMsg.includes("insufficient_quota") ||
+          errorMsg.includes("Too Many Requests") ||
+          errorMsg.includes("billing") ||
+          errorMsg.includes("plan and billing") ||
+          errorMsg.toLowerCase().includes("quota exceeded");
 
         if (isRateLimit) {
           // Continue to next provider
