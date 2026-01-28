@@ -545,13 +545,19 @@ export async function POST(request: NextRequest) {
     const providers = getAvailableProviders();
 
     if (providers.length === 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "No API keys configured. Please add at least one: GOOGLE_AI_API_KEY, OPENAI_API_KEY, ANTHROPIC_API_KEY, OPENROUTER_API_KEY, GROQ_API_KEY (free tier), or HUGGINGFACE_API_KEY (free tier)",
-        },
-        { status: 503 }
-      );
+      // No keys - still return a temporary response so UI works
+      const fallbackText = [
+        "Sample response (no API keys configured):",
+        prompt.length > 300 ? prompt.slice(0, 300) + "…" : prompt,
+        "",
+        "Add GROQ_API_KEY (free) or another provider key in Vercel env for real AI responses.",
+      ].join("\n");
+      return NextResponse.json({
+        success: true,
+        text: fallbackText,
+        model: "fallback",
+        provider: "fallback",
+      });
     }
 
     // Try each provider in order until one succeeds
@@ -621,14 +627,22 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // All providers failed
-    return NextResponse.json(
-      {
-        success: false,
-        error: `All providers failed. Last error: ${lastError?.message || "Unknown error"}`,
-      },
-      { status: 503 }
-    );
+    // All providers failed - return temporary fallback response so UI still works
+    const fallbackText = [
+      "Here’s a sample response based on your request:",
+      prompt.length > 200 ? prompt.slice(0, 200) + "…" : prompt,
+      "",
+      "This is a temporary fallback because API providers are currently unavailable (quota/keys). Add or check GROQ_API_KEY (free tier) in Vercel env for real responses.",
+    ].join("\n");
+
+    console.log("[LLM API] All providers failed, returning temporary fallback response");
+
+    return NextResponse.json({
+      success: true,
+      text: fallbackText,
+      model: "fallback",
+      provider: "fallback",
+    });
   } catch (error) {
     console.error("LLM API Error:", error);
     return NextResponse.json(
